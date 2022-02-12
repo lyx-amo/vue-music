@@ -1,0 +1,35 @@
+/* 文字不允许选中 */
+ul,ol{list-style-type: none;}
+*{  
+    -webkit-touch-callout:none;  /*系统默认菜单被禁用*/   
+    -webkit-user-select:none; /*webkit浏览器*/   
+    -khtml-user-select:none; /*早期浏览器*/   
+    -moz-user-select:none;/*火狐*/   
+    -ms-user-select:none; /*IE10*/   
+    user-select:none;   
+} 
+input{  
+  -webkit-user-select:auto; /*webkit浏览器*/     
+}
+textarea{
+  -webkit-user-select:auto; /*webkit浏览器*/
+}
+
+.pitch {
+  -webkit-user-select:auto;
+}
+/* 自定义滚动条 */
+* {
+  /* 火狐 */
+  scrollbar-width: thin;
+  scrollbar-color: #ccc;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #ccc;
+}

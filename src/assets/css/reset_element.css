@@ -1,0 +1,89 @@
+.el-input__inner {
+    background-color: #373440 !important;
+    border: none;
+    color: white !important;
+    border-radius: 15px;
+}
+/* popover初始样式必须在全局设置 */
+.el-popover{
+    height: 400px;
+    overflow-y: auto;
+    padding: 0px;
+}
+/* 隐藏滚动条不影响滚动 */
+.el-popover::-webkit-scrollbar { 
+    display: none;
+}
+.el-container{
+    min-width: 1024px;
+}
+.el-header{
+    padding: 0;
+    height: 50px !important;
+}
+.el-aside {
+    padding-top: 7px;
+    border-right: 1px solid #eee;
+    height: calc(90vh - 26px);
+}
+.el-menu {
+    border: 0;
+}
+.el-menu-item {
+    height: 40px;
+    line-height: 40px;
+    margin-top: 3px;
+}
+.el-menu :hover {
+    background-color: #f2f2f2;
+}
+.el-main {
+    padding: 0;
+}
+/* 表格hover */
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background-color: #eee !important;
+}
+/* 表格选中时的高亮背景色 */
+.el-table__body tr.current-row>td{
+    background-color: #eee !important;
+}
+/* 表格不显示横向滚动条  */
+.el-table--scrollable-x .el-table__body-wrapper {
+    overflow-x: hidden;
+}
+
+
+/* slider滑块样式 */
+
+.el-slider__button {
+    width: 5px;
+    height: 5px;
+    border: 2px solid #333;
+    background-color: #333;
+}
+.el-slider__button.hover ,.el-slider__button:hover {
+    cursor: -webkit-default ;
+    cursor: default;
+}
+
+.el-slider__button-wrapper.hover, .el-slider__button-wrapper:hover {
+    cursor: -webkit-default ;
+    cursor: default  ; 
+}
+.el-slider__bar {
+    background-color: #333;
+}
+
+.el-slider.is-vertical .el-slider__runway {
+    margin: 0 10px;
+}
+
+/*drawer抽屉  */
+.el-drawer.rtl {
+    height: calc(100vh - 72px);
+}
+
+.el-drawer {
+    box-shadow: none;
+}

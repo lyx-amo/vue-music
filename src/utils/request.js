@@ -6,7 +6,7 @@ const service = axios.create({
     baseURL:'/api',
     // baseURL:'http://localhost:3000',
     timeout:30000,
-    withCredentials: true,//要搜索一下
+    // withCredentials: true,//要搜索一下
 })
 
 service.interceptors.request.use(config => {
