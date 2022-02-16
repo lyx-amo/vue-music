@@ -12,6 +12,12 @@ const singer = () => import('@/views/disCoverMusic/components/singer')
 const songList = () => import('@/views/disCoverMusic/components/songList')
 
 const songListDetail = ()=> import('@/views/songListDetail')
+
+
+const personalCenter = ()=> import('@/views/personalCenter')
+
+
+
 export default [
     // 框架
     {
@@ -85,6 +91,12 @@ export default [
                 props: (route) =>({
                     params:route.params.songListId
                 })
+            },
+            // 个人中心
+            {
+                path:'personalCenter/:uid',
+                name:'personalCenter',
+                component:personalCenter
             }
         ]
     },

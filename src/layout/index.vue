@@ -26,7 +26,7 @@
                 </el-menu>
             </el-aside >
             <el-main>
-                <router-view></router-view>
+                <router-view class="routerView"></router-view>
             </el-main>
                 <ButtomControl></ButtomControl>
         </el-container>
@@ -51,5 +51,11 @@ export default {
         font-size: 15px;
         font-weight: 600;
     }
-    
+    .routerView {
+        padding: 0 30px;
+        // padding: 30px 30px 0px;
+        margin: 0;
+        width: 100%;
+        height: calc(100vh - 120px);
+    }
 </style>

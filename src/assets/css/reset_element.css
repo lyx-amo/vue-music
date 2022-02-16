@@ -1,7 +1,7 @@
 .el-input__inner {
-    background-color: #373440 !important;
+    background-color: #303030 ;
     border: none;
-    color: white !important;
+    color: white ;
     border-radius: 15px;
 }
 /* popover初始样式必须在全局设置 */
@@ -80,7 +80,10 @@
 }
 
 /*drawer抽屉  */
-.el-drawer.rtl {
+.el-drawer__wrapper {
+    bottom: auto !important;
+}
+.el-drawer.rtl ,.el-drawer__container {
     height: calc(100vh - 72px);
 }
 

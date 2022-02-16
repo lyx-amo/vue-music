@@ -39,6 +39,6 @@ export default {
   .disCover {
     overflow-x: hidden;
     overflow-y: auto;
-    height: calc(100vh - 120px);
+    // height: calc(90vh - 120px);
   }
 </style>

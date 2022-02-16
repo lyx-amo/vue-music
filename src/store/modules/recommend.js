@@ -47,6 +47,9 @@ const actions = {
         if(result.code === 200) {
             let songListDetail = result.playlist
             commit('RECEIVE_SONGLISTDETAIL',songListDetail)
+            return 'ok'
+        }else {
+            return Promise.reject(new Error('failed'))
         }
     }
     

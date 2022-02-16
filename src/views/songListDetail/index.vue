@@ -74,11 +74,17 @@
             highlight-current-row
             stripe
             lazy
-            style="width: 100%"
+            style="width: 100%;"
             :cell-style="tableStyle"
             @row-dblclick="playMusic"
+            
+
+            v-infinite-scroll="$store.state.user.isLogin ? loadMore : ''"
+            :infinite-scroll-disabled="scrollLoadDisabled"
+            infinite-scroll-distance="1500"
+            :infinite-scroll-immediate="false"
           >
-            <el-table-column type="index" :index="indexMethod" width="35"> </el-table-column>
+            <el-table-column type="index" :index="indexMethod" min-width="45"> </el-table-column>
             <el-table-column label="操作" width="50">
               <div class="musicDownload">
                 <i class="el-icon-download"></i>  
@@ -92,6 +98,10 @@
             <el-table-column prop="dt" label="时间" width="180" >
             </el-table-column>
           </el-table>
+          <div class="isMusicMore" v-if="isMusicMore && !this.$store.state.user.isLogin">
+            登录后查看更多
+          </div>
+          <div class="placeholder" v-else></div>
         </el-tab-pane>
         <el-tab-pane label="评论(999+)" name="1">
           <Comment></Comment>
@@ -121,6 +131,12 @@ export default {
     return {
       // 是否展开简介
       unfold: false,
+      // 是否还有更多音乐
+      isMusicMore:false,
+      // 是否禁用滚动加载
+      scrollLoadDisabled:true,
+      songListDetail:{},
+      tracks:[]
     };
   },
   created() {
@@ -130,10 +146,6 @@ export default {
 
   },
   computed: {
-    // 获取歌单详情
-    songListDetail(){
-        return this.$store.state.recommend.songListDetail || {}
-    },
     // 创建歌单用户信息
     creator() {
         return this.songListDetail.creator || {}
@@ -155,17 +167,6 @@ export default {
       num =  num > 10000 ? Math.trunc((Math.floor(num/1000)/10))  + '万' : num
       return num
     },
-    // 音乐标题时长等信息
-    tracks() {
-      let tracks = this.songListDetail.tracks || []
-       // 处理音乐时长
-
-      tracks.forEach((item,index) => {
-        tracks[index].dt =  handleMusicTime(item.dt)
-      });
-      return tracks
-    }
-    
   },
   methods: {
     // 点击展开简介
@@ -177,9 +178,31 @@ export default {
       }
     },
     // 获取歌单详情
-    getSongListDetail() {
-        // console.log('id:',this.$props.params);
-      this.$store.dispatch("recommend/getSongListDetail", this.$props.params);
+    async getSongListDetail() {
+      // console.log('id:',this.$props.params);
+      try {
+        await this.$store.dispatch("recommend/getSongListDetail", this.$props.params);
+
+        // console.log(this.$store.state.recommend.songListDetail);
+        this.songListDetail = this.$store.state.recommend.songListDetail
+
+        let tracks = this.songListDetail.tracks || []
+        // 处理音乐时长
+
+        tracks.forEach((item,index) => {
+          tracks[index].dt =  handleMusicTime(item.dt)
+        });
+
+        this.tracks = tracks
+        // 判断是否有更多音乐
+        if(this.songListDetail.tracks.length !== this.songListDetail.trackIds.length) {
+          this.isMusicMore = true
+          this.scrollLoadDisabled = false
+        }
+      } catch (error) {
+        this.$message.error('获取歌单详情失败' + error)
+      }
+      
     },
     // 点击切换tab
     clickTab() {},
@@ -212,6 +235,63 @@ export default {
     indexMethod(index) {
         return index < 9 ? '0' + (index + 1)  : index + 1
     },
+    // 歌曲详情
+    async getMusicDetail(ids){
+      if(this.isMusicMore == false) return
+
+      let result = await this.$API.reqMoreMusicDetail(ids)
+
+      if(result.code === 200) {
+        
+        result.songs.forEach((item,index)=> {
+          result.songs[index].dt = handleMusicTime(item.dt)
+        })
+
+
+        this.tracks.push(...result.songs)
+      }
+
+
+      // 判断当前歌单列表中length是否小于ids的length
+      if(this.tracks.length < this.songListDetail.trackIds.length) {
+        // console.log();
+        // 说明还有更多音乐需要发请求加载
+        this.isMusicMore = true
+        this.scrollLoadDisabled = false
+      }else {
+        this.isMusicMore = false
+      }
+    },
+    // 无限滚动回调
+    loadMore() {
+      console.log('loadMore start');
+      // if (this.scrollLoadDisabled === false)
+      this.scrollLoadDisabled = true
+      // 已经登录
+      if(!this.$store.state.user.isLogin) {
+        this.$message.warning('登录获取更多音乐')
+        return
+      }
+      // 处理id拼串发请求拿到更多音乐
+      // 提取出去除之前内容的数组
+      let arr = this.songListDetail.trackIds.slice(this.tracks.length)
+
+
+      // 每次最多拿100条
+      if(arr.length > 100) {
+        arr = arr.slice(0 , 100)
+      }
+
+      let ids = ''
+
+      arr.forEach((item)=> {
+        ids += item.id + ',';
+      })
+      ids = ids.substring(0,ids.length - 1)
+
+
+      this.getMusicDetail(ids)
+    },
     // 表格单列样式
     tableStyle(row) {
       if(row.columnIndex === 5 || row.columnIndex < 2) {
@@ -230,14 +310,16 @@ export default {
 
 <style lang="less" scoped>
 .songListDetailContainer {
-  padding: 30px 30px 0px;
-  overflow-x: hidden;
-  overflow-y: scroll;  
-  height: calc(100vh - 120px);
+  // padding: 30px 30px 0px;
+  // padding-left: 15px;
+  // overflow-x: hidden;
+  // overflow-y: auto;  
+  // height: calc(100vh - 120px);
+  // overflow-y: scroll;
 }
 .songListInfo {
   display: flex;
-
+  padding: 30px 0;
   .listLeft {
     width: 180px;
     height: 180px;
@@ -389,7 +471,22 @@ export default {
   }
 }
 .musicList {
-  margin-top: 30px;
+  margin-top: 10px;
+  // height: 100%;
+  // overflow-y: auto;
+}
+.placeholder {
+  width: 100%;
+  height: 50px;
 }
 
+.isMusicMore {
+  width: 100%;
+  height: 50px;
+  font-size: 12px;
+  color: #aaa;
+  text-align: center;
+  line-height: 50px;
+  // transform: scale(0.9);
+}
 </style>

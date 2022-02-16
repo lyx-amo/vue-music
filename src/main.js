@@ -26,7 +26,6 @@ new Vue({
   beforeCreate() {
     // 创建或指定全局事件对象,保存在vue的原型上
     Vue.prototype.$bus = this
-    
   },
   render: h => h(App),
   router,

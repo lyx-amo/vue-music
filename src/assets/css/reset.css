@@ -33,3 +33,9 @@ textarea{
   border-radius: 10px;
   background-color: #ccc;
 }
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

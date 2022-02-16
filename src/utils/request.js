@@ -1,7 +1,7 @@
 // axios二次封装
 
 import axios from "axios";
-
+import store from "@/store";
 const service = axios.create({
     baseURL:'/api',
     // baseURL:'http://localhost:3000',
@@ -10,6 +10,13 @@ const service = axios.create({
 })
 
 service.interceptors.request.use(config => {
+
+    // 将用户id保存到请求头中
+    // let userId = store.state.user.userId
+    // if(userId) {
+    //     config.headers.userId = userId
+    // }
+
     return config
 })
 
