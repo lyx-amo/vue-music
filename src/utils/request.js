@@ -1,7 +1,8 @@
 // axios二次封装
 
 import axios from "axios";
-import store from "@/store";
+import {Message} from 'element-ui'
+// import store from "@/store";
 const service = axios.create({
     baseURL:'/api',
     // baseURL:'http://localhost:3000',
@@ -26,7 +27,7 @@ service.interceptors.response.use(
         return response.data
     },
     error => {
-        alert(error.message || '请求错误')
+        Message.error(error.message || '请求错误')
         throw error
     }
 )

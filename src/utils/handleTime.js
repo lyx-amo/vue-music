@@ -1,3 +1,4 @@
+import dayjs from'dayjs'
 
 // 处理音乐时长
 export function handleMusicTime(time) {
@@ -26,3 +27,13 @@ export function returnSecond(time) {
     return m * 60 + s ;
 }
 
+// 处理播放量
+export function handlePlayCount(num) {
+    num =  num > 100000000 ? Math.trunc((Math.floor(num/10000000)/10))  + '亿' : num > 10000 ? Math.trunc((Math.floor(num/1000)/10))  + '万' : num
+    return num
+}
+
+export function handleCommentTime(time) {
+    return dayjs(time).format('YYYY年MM月DD日HH:mm')
+    // return dayjs(time).format('HH:mm')
+}   

@@ -1,5 +1,5 @@
 import { setUserId, getUserId } from '@/utils/userAbout'
-import { reqUserLogin,reqUserDetail } from '@/api'
+import { reqUserLogin,reqUserDetail ,reqSubcount} from '@/api'
 import {Message} from "element-ui";
 const state = {
     //    token:'',
@@ -8,7 +8,16 @@ const state = {
     // 用户详情信息
     userDetail:{},
     // 是否登录
-    isLogin:false
+    isLogin:false,
+    // 用户喜欢音乐列表
+    likeMusicList:null,
+    // 获取用户信息 , 歌单，收藏，mv, dj 数量
+    subcount:null,
+    // 用户收藏歌单
+    collectSonglist:[],
+    // 用户创建歌单
+    userCreateList:[],
+    isCollect:''
 }
 const mutations = {
     RECEIVE_TOKEN(state, token) {
@@ -25,13 +34,31 @@ const mutations = {
     },
     updateUserInfo(state,userInfo) {
         state.userInfo = userInfo 
+    },
+    RECEIVE_LIKELIST(state,likeList) {
+        state.likeMusicList = likeList 
+    },
+    RECEIVE_SUBCOUNT(state,subcount) {
+        state.subcount = subcount
+    },
+    // 更新用户收藏歌单
+    updateCollectSonglist(state,collectSonglist) {
+        state.collectSonglist = collectSonglist
+    },
+    // 更新用户所有歌单
+    updateUserSongList(state,{userCreateList,collectSonglist}) {
+        state.userCreateList = userCreateList
+        state.collectSonglist = collectSonglist
+    },
+    updateCollect(state,isCollect) {
+        state.isCollect = isCollect
     }
-   
 }
 const actions = {
     // 获取用户登录id
     async userLogin({ commit }, userForm) {
-        let result = await reqUserLogin(userForm)
+        let timestamp = Date.now()
+        let result = await reqUserLogin(userForm,timestamp)
         if (result.code === 200) {
             // commit('RECEIVE_TOKEN',result.token)
             // 获取用户id
@@ -74,6 +101,27 @@ const actions = {
     // 改变登录状态
     updataLoginState({commit},isLogin) {
         commit('updataLoginState',isLogin)
+    },
+    // async getLikeMusicList({commit}) {
+      
+    //     let result = await reqLikeMusicList(state.userId)
+        
+    //     if(result === 200) {
+    //         // 拿到的是喜欢音乐id的数组
+    //         commit('RECEIVE_LIKELIST',result.ids)
+    //         return 'ok'
+    //     }else {
+    //         return Promise.reject(new Error('failed'))
+    //     }
+
+    // },
+    // 获取用户信息 , 歌单，收藏，mv, dj 数量
+    async getSubcount({commit}) {
+        const result = await reqSubcount()
+        if(result.code === 200) {
+            console.log(result);
+            commit('RECEIVE_SUBCOUNT',result)
+        }
     }
 }
 const getters = {

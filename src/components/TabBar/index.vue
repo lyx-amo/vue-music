@@ -30,16 +30,24 @@ export default {
   created(){
     // 组件实例创建完成,完成数据代理,可以发送首屏请求
     // 通过path修改当前选择的tab选项
+    // 刷新页面tab选项会重新回到0 应该在组件实例创建完成时就更新当前的tab选项
     // console.log(this.$route.path);
     // console.log(decodeURI(this.$route.path));
-    // this.tabBarList.forEach((item,index) => {
-    //   if(decodeURI(this.$route.path).search(item.path) !== -1) {
-    //     this.tabBarNum = index
-    //   }
-    // })
+    this.tabBarList.forEach((item,index) => {
+      if(decodeURI(this.$route.path).search(item.path) !== -1) {
+        this.tabBarNum = index
+      }
+    })
   },
   methods:{
     handleTabBarItem(index,path){
+      // console.log(this.$route.path);
+
+      if(this.$route.path == '/disCoverMusic/songList/highqualityList') {
+        this.$emit('handleTabBarItem','/disCoverMusic/songList/categorySongList')
+        return
+      }
+
       // 点击后将index存起来,并切换路由显示
       if(this.tabBarNum == index) {
         return
@@ -47,13 +55,25 @@ export default {
       this.tabBarNum = index
       this.$emit('handleTabBarItem',path)
     }
+  },
+  watch:{
+    '$route.path'(path){
+      if(path=='/disCoverMusic/recommend') {
+        this.handleTabBarItem(0,path)
+      }
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
   .tabBarContainer{
-    z-index: 2;
+    width: 100%;
+    height: 60px;
+    padding: 0 30px;
+    position: relative;
+    z-index: 9999;
+    background-color: white;
   } 
   .tabBar {
     display: flex;

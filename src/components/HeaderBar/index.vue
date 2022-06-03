@@ -3,8 +3,8 @@
       <div id="logo"></div>
       <div class="center">
         <div class="button">
-          <i class="iconfont icon-shangyiye"></i>
-          <i class="iconfont icon-xiayiye"></i>
+          <i @click="history(1)" class="iconfont icon-shangyiye"></i>
+          <i @click="history(2)" class="iconfont icon-xiayiye"></i>
         </div>
         <div class="search">
           <el-popover popper-class="searchPop" placement="bottom" width="300" trigger="focus" v-model="isPopover" >
@@ -52,7 +52,7 @@
         <!-- <div v-if="userInfo && userInfo.nickname" class="userInfo" @click="ToPersonal"> -->
         <div v-if="$store.state.user.isLogin" class="userInfo" @click="ToPersonal">
         <!-- <div v-if="$store.state.user.userId" class="userInfo" @click="ToPersonal"> -->
-          <img :src="userInfo.avatarUrl" alt="">
+          <img :src="userInfo.avatarUrl" :draggable="false" alt="">
           <span>{{userInfo.nickname}}</span>
           <!-- <span>你好我在近距离伟大打啊大大的人</span> -->
         </div>
@@ -67,7 +67,7 @@
 <script>
 import Login from '@/components/Login'
 import { mapGetters } from 'vuex';
-import {getUserId,setUserId,removeUserId} from '@/utils/userAbout'
+import {setUserId,removeUserId} from '@/utils/userAbout'
 // import {mapState} from 'vuex'
 // 节流定时器
 export default {
@@ -88,6 +88,17 @@ export default {
     }
   },
   methods:{
+    // history操作历史记录
+    history (log) {
+
+      if(log === 1) {
+        // history.back()
+        history.go(-1)
+      }else {
+        // history.forward()
+        history.go(1)
+      }
+    },
     // 获取热搜列表
     getHotList(){
       this.$store.dispatch('home/getHotList')
@@ -131,24 +142,25 @@ export default {
     // },
     // 获取用户信息
     async getUserInfo() {
-      let result = await this.$API.reqUserInfo()
+      let timestamp = Date.now()
+      let result = await this.$API.reqUserInfo(timestamp)
       if( result.code === 200 && result.profile !== null) {
         this.userInfo = result.profile
-
-        this.$store.dispatch('user/updataLoginState',true)
-
         setUserId(result.profile.userId)
+        this.$store.dispatch('user/updataLoginState',true)
       }else {
-        this.$store.dispatch('user/updataLoginState',false)
+
         // 清除userId
         if(this.$store.state.user.userId) {
           removeUserId()
+          this.$store.dispatch('user/updataLoginState',false)
         }
       }
     },
     // 跳转至个人中心
     ToPersonal() {
       if(this.$route.path !== `personalCenter/${this.$store.state.user.userId}`) {
+        console.log(this.$route.params);
         this.$router.push({
           name:'personalCenter',
           params:{uid:this.$store.state.user.userId}
@@ -186,12 +198,12 @@ export default {
     
   },
   watch:{
-    "this.$store.state.user.userId":{
-      immediate:true,
-      handler(id) {
-        // this.getUserInfo()
-      }
-    },
+    // "this.$store.state.user.userId":{
+    //   immediate:true,
+    //   handler(id) {
+    //     // this.getUserInfo()
+    //   }
+    // },
     "this.$store.state.user.isLogin"() {
       this.getUserInfo()
     }
@@ -200,11 +212,17 @@ export default {
 
 </script>
 
+
 <style lang="less" scoped>
+
+  /* 隐藏滚动条不影响滚动 */
+  ::v-deep .el-popover::-webkit-scrollbar {
+    display: none;
+  }
   .headerBar {
     // position: relative;
     position: fixed;
-    z-index: 200;
+    z-index: 9999;
     width: 100%;
     height: 50px;
     // background-color: rgb(60,57,70);
@@ -233,6 +251,7 @@ export default {
           padding: 5px;
           background: #2f2f2f;
           border-radius: 50%;
+          cursor: pointer;
         }
       }
       // 搜索框
@@ -271,7 +290,7 @@ export default {
       padding: 5px 10px;
       
       .hotSearchIndex{
-        width: 20px;
+        width: 40px;
         height: 20px;
         // text-align: center;
         padding: 0 10px;
@@ -355,4 +374,6 @@ export default {
       font-size: 12px;
     }
   }
+
+ 
 </style>

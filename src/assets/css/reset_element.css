@@ -1,76 +1,138 @@
 .el-input__inner {
-    background-color: #303030 ;
+    background-color: #303030;
     border: none;
-    color: white ;
+    color: white;
     border-radius: 15px;
 }
+
 /* popover初始样式必须在全局设置 */
-.el-popover{
+/* .el-popover {
+    height: 400px;
+    overflow-y: auto;
+    padding: 0px;
+} */
+/* 最大的坑,中间不能有空格 */
+.el-popover.searchPop{
     height: 400px;
     overflow-y: auto;
     padding: 0px;
 }
-/* 隐藏滚动条不影响滚动 */
-.el-popover::-webkit-scrollbar { 
-    display: none;
+
+.el-popover.listTagPop{
+    /* height: 200px; */
+    padding: 0px;
+    /* overflow-y: hidden; */
 }
-.el-container{
+
+
+/* 隐藏滚动条不影响滚动 */
+/* .el-popover::-webkit-scrollbar {
+    display: none;
+} */
+
+.el-container {
     min-width: 1024px;
 }
-.el-header{
+
+.el-header {
     padding: 0;
     height: 50px !important;
 }
+
 .el-aside {
     padding-top: 7px;
     border-right: 1px solid #eee;
     height: calc(90vh - 26px);
 }
+
 .el-menu {
     border: 0;
 }
+
 .el-menu-item {
     height: 40px;
     line-height: 40px;
     margin-top: 3px;
 }
+
 .el-menu :hover {
     background-color: #f2f2f2;
 }
+
 .el-main {
     padding: 0;
 }
+
 /* 表格hover */
-.el-table--enable-row-hover .el-table__body tr:hover>td{
+.el-table--enable-row-hover .el-table__body tr:hover>td {
     background-color: #eee !important;
 }
+
+
+
 /* 表格选中时的高亮背景色 */
-.el-table__body tr.current-row>td{
+.el-table__body tr.current-row>td {
     background-color: #eee !important;
 }
+
 /* 表格不显示横向滚动条  */
 .el-table--scrollable-x .el-table__body-wrapper {
     overflow-x: hidden;
 }
 
+.el-tabs_item:focus,
+.is-active,
+.is-focus:not(:active) {
+    box-shadow: none !important;
+}
+
+body .el-table .el-table__row .currentRow {
+    /* color: #ec4141 !important; */
+    /* font-weight: 600; */
+    color: #333 !important;
+}
+
+body .el-table .el-table__row .currentRow3 {
+    height: 23px;
+}
+
+body .el-table .el-table__row .currentRow1 ::before,
+body .el-table .el-table__row .currentRow1 ::after {
+    content: '';
+    width: 2px;
+    height: 8px;
+    background-color: #333;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+}
+
+body .el-table .el-table__row .currentRow1 ::after {
+    left: 10px;
+}
 
 /* slider滑块样式 */
 
 .el-slider__button {
-    width: 5px;
-    height: 5px;
+    width: 8px;
+    height: 8px;
     border: 2px solid #333;
     background-color: #333;
 }
-.el-slider__button.hover ,.el-slider__button:hover {
-    cursor: -webkit-default ;
+
+.el-slider__button.hover,
+.el-slider__button:hover {
+    cursor: -webkit-default;
     cursor: default;
 }
 
-.el-slider__button-wrapper.hover, .el-slider__button-wrapper:hover {
-    cursor: -webkit-default ;
-    cursor: default  ; 
+.el-slider__button-wrapper.hover,
+.el-slider__button-wrapper:hover {
+    cursor: -webkit-default;
+    cursor: default;
 }
+
 .el-slider__bar {
     background-color: #333;
 }
@@ -83,10 +145,45 @@
 .el-drawer__wrapper {
     bottom: auto !important;
 }
-.el-drawer.rtl ,.el-drawer__container {
+
+.el-drawer.rtl,
+.el-drawer__container {
     height: calc(100vh - 72px);
 }
 
 .el-drawer {
     box-shadow: none;
+}
+
+
+
+/* 分页器 */
+.el-pagination {
+    text-align: center;
+    margin: 30px 0 70px 0;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+    background: #333333 !important;
+    color: #fff !important;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled):hover {
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+.el-pagination.is-background .el-pager li {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+}
+
+.el-pagination.is-background .btn-prev {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+}
+
+.el-pagination.is-background .btn-next {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
 }

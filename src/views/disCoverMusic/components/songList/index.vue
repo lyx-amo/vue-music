@@ -1,12 +1,12 @@
 <template>
   <div>
-     歌单
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: '',
+  name: 'songList',
 }
 </script>
 

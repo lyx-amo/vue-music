@@ -10,11 +10,16 @@ const rankingList = () => import('@/views/disCoverMusic/components/rankingList')
 const recommend = () => import('@/views/disCoverMusic/components/recommend')
 const singer = () => import('@/views/disCoverMusic/components/singer')
 const songList = () => import('@/views/disCoverMusic/components/songList')
+const highqualityList = ()=> import('@/views/disCoverMusic/components/songList/highqualityList')
+const categorySongList = ()=> import('@/views/disCoverMusic/components/songList/categorySongList')
+
+
 
 const songListDetail = ()=> import('@/views/songListDetail')
 
 
 const personalCenter = ()=> import('@/views/personalCenter')
+
 
 
 
@@ -45,7 +50,20 @@ export default [
                     {
                         path:'songList',
                         name:'songList',
-                        component:songList
+                        component:songList,
+                        redirect:'/disCoverMusic/songList/categorySongList',
+                        children:[
+                            {
+                                path:'highqualityList',
+                                name:'highqualityList',
+                                component:highqualityList,
+                            },
+                            {
+                                path:'categorySongList',
+                                name:'categorySongList',
+                                component:categorySongList,
+                            }
+                        ]
                     },
                     {
                         path:'rankingList',
@@ -91,13 +109,18 @@ export default [
                 props: (route) =>({
                     params:route.params.songListId
                 })
+                // 在需要映射的组件中使用props:['songListId'] 接收
             },
             // 个人中心
             {
                 path:'personalCenter/:uid',
                 name:'personalCenter',
-                component:personalCenter
-            }
+                component:personalCenter,
+                props:(route)=>({
+                    uid:route.params.uid
+                })
+            },
+            
         ]
     },
     

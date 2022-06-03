@@ -1,12 +1,14 @@
 import {
     reqBanner,
     reqRecommendSongList,
-    reqSongListDetail
+    reqSongListDetail,
+    reqUserRecommendSongList
 } from '@/api'
+import store from '..'
 
 const state = {
     banners : [],
-    recommendSongList:{},
+    recommendSongList:[],
     songListDetail:{}
 }
 const mutations = {
@@ -30,38 +32,42 @@ const actions = {
     },
     // 获取歌单列表
     async getRecommendSongList({commit}) {
-        const result = await reqRecommendSongList()
-        if(result.code === 200) {
-            
-            const recommendSongList = {
-                // 是否为偏好歌单,需要登录
-                hasTaste:result.hasTaste,
-                songList:result.result
+        if(store.state.user.userId) {
+            let timestamp = Date.now()
+            const result = await reqUserRecommendSongList()
+            const result1 = await reqRecommendSongList(timestamp)
+            if(result.code === 200) {
+                // const recommendSongList = result.recommend.slice(0,10)
+                // 避免推荐的歌单不够十条,拼接一下
+                const recommendSongList = result.recommend.concat(result1.result).slice(0,10)
+                commit('RECEIVE_RECOMMENDSONGLIST',recommendSongList)
+            }        
+        }else {
+            let timestamp = Date.now()
+            const result = await reqRecommendSongList(timestamp)
+            if(result.code === 200) {
+                const recommendSongList = result.result
+                commit('RECEIVE_RECOMMENDSONGLIST',recommendSongList)
             }
-            commit('RECEIVE_RECOMMENDSONGLIST',recommendSongList)
         }
+        
+
     },
     // 获取歌单详情
     async getSongListDetail({commit},id) {
-        const result = await reqSongListDetail(id)
+        let timestamp = Date.now()
+        const result = await reqSongListDetail(id,timestamp)
         if(result.code === 200) {
             let songListDetail = result.playlist
             commit('RECEIVE_SONGLISTDETAIL',songListDetail)
             return 'ok'
         }else {
-            return Promise.reject(new Error('failed'))
+            return Promise.reject(new Error('failed,歌单详情获取失败'))
         }
     }
     
 }
 const getters = {
-    // 推荐的歌单
-    songList(state) {
-        return state.recommendSongList.songList || []
-    },
-    hasTaste(state) {
-        return state.recommendSongList.hasTaste || ''
-    },
     
 }
 
